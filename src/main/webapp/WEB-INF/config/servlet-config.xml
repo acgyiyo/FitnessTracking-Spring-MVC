@@ -11,25 +11,65 @@
 	<!-- sirve para indicar que se van a usar anotaciones -->
 	<mvc:annotation-driven />
 	<!-- sirve para indicar el lugar donde se van a encontrar los controladores -->
-	<context:component-scan
-		base-package="com.pluralsight.controller" />
+	<context:component-scan	base-package="com.pluralsight.controller" />
+	<context:component-scan	base-package="com.pluralsight.services" />
+
+<!-- todo este super bean sirve para mapear json y xml diretamente desde las clases que tengan un para hacer servicios web  -->
+	<bean
+		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<property name="order" value="1" />
+		<property name="contentNegotiationManager">
+			<bean
+				class="org.springframework.web.accept.ContentNegotiationManager">
+				<constructor-arg>
+					<bean
+						class="org.springframework.web.accept.PathExtensionContentNegotiationStrategy">
+						<constructor-arg>
+							<map>
+								<entry key="json" value="application/json"></entry>
+								<entry key="xml" value="application/xl"></entry>
+							</map>
+						</constructor-arg>
+					</bean>
+				</constructor-arg>
+			</bean>
+		</property>
+		<property name="defaultViews">
+			<list>
+				<bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"/>
+				<bean class="org.springframework.web.servlet.view.xml.MarshallingView">
+					<constructor-arg>
+						<bean class="org.springframework.oxm.xstream.XStreamMarshaller">
+							<property name="autodetectAnnotations" value="true"/>
+						</bean>
+					</constructor-arg>
+				</bean>
+			</list>
+		</property>
+	</bean>
 
 	<!-- con esto indicamos una location statica para servir archivos sin tgener 
 		que pasa un requetMapping, etc -->
-	<mvc:resources location="pdfs" mapping="/pdfs/**" />	
-	
-<!-- 	interceptor para cambiar el idioma seleccionado el paramName es el paramtro en la url-->
-	<mvc:interceptors>
-		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" p:paramName="idioma" />
-	</mvc:interceptors>
-	
-<!-- 	bean usado simplemente para que sping sepa cual locale usar en un prinncipio -->
-	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" p:defaultLocale="es"></bean>
+	<mvc:resources location="pdfs" mapping="/pdfs/**" />
 
-<!-- bean usado para setear un archivo de propiedades de textos comunmente usado en internacionalización -->
+	<!-- interceptor para cambiar el idioma seleccionado el paramName es el 
+		paramtro en la url -->
+	<mvc:interceptors>
+		<bean
+			class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"
+			p:paramName="idioma" />
+	</mvc:interceptors>
+
+	<!-- bean usado simplemente para que sping sepa cual locale usar en un prinncipio -->
+	<bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.SessionLocaleResolver"
+		p:defaultLocale="es"></bean>
+
+	<!-- bean usado para setear un archivo de propiedades de textos comunmente 
+		usado en internacionalización -->
 	<bean id="messageSource"
 		class="org.springframework.context.support.ResourceBundleMessageSource"
-		p:basename="messages"/>
+		p:basename="messages" />
 
 
 	<!-- <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"> 

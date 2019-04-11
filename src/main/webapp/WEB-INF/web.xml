@@ -15,7 +15,17 @@
 	<servlet-mapping>
 		<servlet-name>fitTrackerServlet</servlet-name>
 		<url-pattern>*.html</url-pattern>
-		
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>fitTrackerServlet</servlet-name>
+		<url-pattern>/pdfs/**</url-pattern>
+	</servlet-mapping>
+	
+<!-- se crea un mapping para que lea json en la url -->
+	<servlet-mapping>
+		<servlet-name>fitTrackerServlet</servlet-name>
+		<url-pattern>*.json</url-pattern>
 	</servlet-mapping>
 
 	<display-name>Archetype Created Web Application</display-name>
